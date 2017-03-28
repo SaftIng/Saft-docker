@@ -1,0 +1,30 @@
+version: '2'
+services:
+    php:
+        build: ./php
+        links:
+            - virtuoso
+        ports:
+            - 8001:80
+        volumes:
+            # please adapt path for local development
+            - /home/k00ni/Documents/Saft:/app
+
+    virtuoso:
+        image: tenforce/virtuoso:1.1.1-virtuoso7.2.2
+
+        # Uncomment if you need certain environment variables
+        # environment:
+            # SPARQL_UPDATE: "true"
+            # DEFAULT_GRAPH: "http://www.example.com/my-graph"
+
+        # Uncomment if you need volume support
+        # volumes:
+        # - /path/to/virtuoso/data:/data
+
+        environment:
+            DBA_PASSWORD: dba
+
+        ports:
+            - "8002:1111"
+            - "8003:8890"
