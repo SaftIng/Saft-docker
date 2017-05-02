@@ -1,7 +1,8 @@
 FROM php:5.6-cli
 
-RUN apt-get update && apt-get install -y libvirtodbc0 unixODBC-dev && rm -rf /var/lib/apt/lists/*
-RUN docker-php-ext-install -j$(nproc) mysqli pdo pdo_mysql
+RUN apt-get update && apt-get install -y git libvirtodbc0 unzip unixODBC-dev xsltproc zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+RUN docker-php-ext-install -j$(nproc) mysqli pdo pdo_mysql zip
 
 # install ODBC (https://github.com/docker-library/php/issues/103)
 RUN docker-php-ext-configure pdo_odbc --with-pdo-odbc=unixODBC,/usr \
@@ -20,6 +21,9 @@ RUN set -ex \
   echo 'Driver = /usr/lib/x86_64-linux-gnu/odbc/virtodbc.so'; \
   echo 'Address = virtuoso:1111'; \
  } | tee /etc/odbc.ini
+
+# install composer globally
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN mkdir /app
 WORKDIR /app
