@@ -14,9 +14,9 @@ services:
         image: tenforce/virtuoso:1.1.1-virtuoso7.2.2
 
         # Uncomment if you need certain environment variables
-        # environment:
-            # SPARQL_UPDATE: "true"
-            # DEFAULT_GRAPH: "http://www.example.com/my-graph"
+        environment:
+            SPARQL_UPDATE: "true"
+            DEFAULT_GRAPH: "http://www.example.com/my-graph"
 
         # Uncomment if you need volume support
         # volumes:
@@ -28,3 +28,20 @@ services:
         ports:
             - "8002:1111"
             - "8003:8890"
+
+    sqldb:
+      image: mariadb
+      environment:
+          MYSQL_ROOT_PASSWORD: Pass123
+      restart: always
+
+    phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      links:
+        - sqldb:mysql
+      ports:
+        - 8004:80
+      environment:
+        MYSQL_USERNAME: root
+        MYSQL_ROOT_PASSWORD: Pass123
+        PMA_HOST: sqldb
