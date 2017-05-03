@@ -1,6 +1,7 @@
 default:
 	make build
 	make run
+	docker exec -it saft_php_1 bash
 
 build:
 	docker-compose build

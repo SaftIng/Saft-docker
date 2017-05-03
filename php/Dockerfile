@@ -1,8 +1,15 @@
 FROM php:5.6-cli
 
-RUN apt-get update && apt-get install -y git libvirtodbc0 unzip unixODBC-dev xsltproc zlib1g-dev \
+# FYI: PHP is located under /usr/local/etc/php !
+
+RUN apt-get update && apt-get install -y git libvirtodbc0 php5-xdebug unzip unixODBC-dev xsltproc zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-install -j$(nproc) mysqli pdo pdo_mysql zip
+
+# setup php5-xdebug
+RUN php5enmod xdebug
+RUN cp /etc/php5/mods-available/xdebug.ini /usr/local/etc/php/conf.d
+RUN cp /usr/lib/php5/20131226/xdebug.so /usr/local/lib/php/extensions/no-debug-non-zts-20131226/xdebug.so
 
 # install ODBC (https://github.com/docker-library/php/issues/103)
 RUN docker-php-ext-configure pdo_odbc --with-pdo-odbc=unixODBC,/usr \
@@ -27,6 +34,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN mkdir /app
 WORKDIR /app
+
+COPY php.ini /usr/local/etc/php/php.ini
 
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
