@@ -7,8 +7,8 @@ services:
         ports:
             - 8001:80
         volumes:
-            # please adapt path for local development
-            - /home/k00ni/Documents/Saft:/app
+            # using a symbolic link referenced folder containing saft
+            - ./saft:/app
 
     virtuoso:
         image: tenforce/virtuoso:1.1.1-virtuoso7.2.2
